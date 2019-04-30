@@ -1,6 +1,3 @@
-/**
- * Created by hao.cheng on 2017/4/13.
- */
 import React, { Component } from 'react';
 import { Layout } from 'antd';
 import { withRouter } from 'react-router-dom';
@@ -10,7 +7,8 @@ import SiderMenu from './SiderMenu';
 const { Sider } = Layout;
 
 class SiderCustom extends Component {
-    static getDerivedStateFromProps (props, state) {
+
+    static getDerivedStateFromProps(props, state) {
         if (props.collapsed !== state.collapsed) {
             const state1 = SiderCustom.setMenuOpen(props);
             const state2 = SiderCustom.onCollapse(props.collapsed);
@@ -23,6 +21,7 @@ class SiderCustom extends Component {
         }
         return null;
     }
+
     static setMenuOpen = props => {
         const { pathname } = props.location;
         return {
@@ -30,24 +29,26 @@ class SiderCustom extends Component {
             selectedKey: pathname
         };
     };
+
     static onCollapse = (collapsed) => {
         return {
             collapsed,
-            // firstHide: collapsed,
             mode: collapsed ? 'vertical' : 'inline',
         };
     };
+
     state = {
         mode: 'inline',
         openKey: '',
         selectedKey: '',
         firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
     };
+
     componentDidMount() {
-        // this.setMenuOpen(this.props);
         const state = SiderCustom.setMenuOpen(this.props);
         this.setState(state);
     }
+
     menuClick = e => {
         this.setState({
             selectedKey: e.key
@@ -55,12 +56,14 @@ class SiderCustom extends Component {
         const { popoverHide } = this.props; // 响应式布局控制小屏幕点击菜单时隐藏菜单操作
         popoverHide && popoverHide();
     };
+
     openMenu = v => {
         this.setState({
             openKey: v[v.length - 1],
             firstHide: false,
         })
     };
+
     render() {
         const { selectedKey, openKey, firstHide, collapsed } = this.state;
         return (
@@ -70,7 +73,7 @@ class SiderCustom extends Component {
                 collapsed={collapsed}
                 style={{ overflowY: 'auto' }}
             >
-                <div className="logo" />
+                <div className="logo"><p>Live360</p></div>
                 <SiderMenu
                     menus={routes.menus}
                     onClick={this.menuClick}

@@ -137,5 +137,6 @@
     "presets": [
       "react-app"
     ]
-  }
+  },
+  "proxy": "http://www.ossrs.net:1985/api/v1/"
 }
