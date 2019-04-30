@@ -8,54 +8,99 @@ class Dashboard extends React.Component {
 
     state = {
         running: true,
-        srs_duration: 6773130,
-        srs_cpu: 0.0266223,
-        srs_mem_kbyte: 97616,
+        srs_duration: 0,
+        srs_cpu: 0,
+        srs_mem_kbyte: 0,
+        srs_mem_percent: 0,
+        sys_mem_ram_kbyte: 0,
+        sys_mem_ram_percent: 0,
+        sys_cpus: 0,
+        sys_cpus_online: 0,
+        sys_uptime: 0,
+        sys_cpu_percent: 0,
+        sys_disk_write_KBps: 0,
+        sys_disk_read_KBps: 0,
     }
 
 
-    updateInfo = () => {
+    updateSummaries = () => {
         SRSAPI.get('summaries')
             .then(response => {
                 let data = response.data.data
                 this.setState({
-                    running: true,
+                    running: data.ok,
                     srs_duration: data.self.srs_uptime,
                     srs_cpu: data.self.cpu_percent,
-                    srs_mem_kbyte: data.self.mem_percent,
+                    srs_mem_kbyte: data.self.mem_kbyte,
+                    srs_mem_percent: data.self.mem_percent,
+                    sys_mem_ram_kbyte: data.system.mem_ram_kbyte,
+                    sys_mem_ram_percent: data.system.mem_ram_percent,
+                    sys_cpus: data.system.cpus,
+                    sys_cpus_online: data.system.cpus_online,
+                    sys_uptime: data.system.uptime,
+                    sys_cpu_percent: data.system.cpu_percent,
+                    sys_disk_write_KBps: data.system.disk_write_KBps,
+                    sys_disk_read_KBps: data.system.disk_read_KBps,
                 })
             })
     }
+
+    updateClients = () => {
+        SRSAPI.get('clients/')
+            .then(response => {
+                let length = response.data.clients.length
+                this.setState({
+                    srs_client_number: length
+                })
+            })
+    }
+
+    updateStreams = () => {
+        SRSAPI.get('streams/')
+            .then(response => {
+                let length = response.data.streams.length
+                this.setState({
+                    srs_streams_number: length
+                })
+            })
+    }
+
+    secondToString = (time) => {
+        var days = Math.floor((time / (3600 * 24)))
+        var hours = Math.floor((time - (days * 3600 * 24)) / 3600)
+        var minutes = Math.floor((time - (days * 3600 * 24) - (hours * 3600)) / 60)
+        var time_string = ""
+        if (days > 0) {
+            time_string += (days + "天 ")
+        }
+        time_string += (hours + "小时 ")
+        time_string += (minutes + "分钟")
+        return time_string
+    }
+
+
+
 
     componentDidMount() {
-        SRSAPI.get('summaries')
-            .then(response => {
-                let data = response.data.data
-                this.setState({
-                    running: true,
-                    srs_duration: data.self.srs_uptime,
-                    srs_cpu: data.self.cpu_percent,
-                    srs_mem_kbyte: data.self.mem_percent,
-                })
-            })
+        this.updateSummaries()
+        this.updateClients()
+        this.updateStreams()
         this.interval = setInterval(
             () => {
-                SRSAPI.get('summaries')
-                    .then(response => {
-                        let data = response.data.data
-                        this.setState({
-                            running: true,
-                            srs_duration: data.self.srs_uptime,
-                            srs_cpu: data.self.cpu_percent,
-                            srs_mem_kbyte: data.self.mem_percent,
-                        })
-                    })
+                this.updateSummaries()
+            }
+            , 3000)
+        this.interval2 = setInterval(
+            () => {
+                this.updateClients()
+                this.updateStreams()
             }
             , 6000)
     }
 
     componentWillUnmount() {
-        this.interval && clearInterval(this.interval);
+        this.interval && clearInterval(this.interval)
+        this.interval2 && clearInterval(this.interval2)
     }
 
 
@@ -92,19 +137,21 @@ class Dashboard extends React.Component {
                                 <div className="clear y-center">
                                     <div className="clear">
                                         <div className="text-muted">服务运行</div>
-                                        <h2>{this.state.srs_duration}</h2>
+                                        <h2>{this.secondToString(this.state.srs_duration)}</h2>
                                     </div>
                                 </div>
                                 <div className="clear y-center">
                                     <div className="clear">
                                         <div className="text-muted">CPU占用</div>
-                                        <h2>{this.state.srs_cpu}</h2>
+                                        <h2>{(this.state.srs_cpu * 100).toFixed(2) + " %"}</h2>
                                     </div>
                                 </div>
                                 <div className="clear y-center">
                                     <div className="clear">
                                         <div className="text-muted">内存占用</div>
-                                        <h2>{this.state.srs_mem_kbyte}</h2>
+                                        <h2>{(this.state.srs_mem_kbyte / 1024).toFixed(1) + "MB / "
+                                            + Math.round(this.state.sys_mem_ram_kbyte / 1024 / 1024) + "GB "
+                                            + (this.state.srs_mem_percent * 100).toFixed(2) + "%"}</h2>
                                     </div>
                                 </div>
                                 <div className="clear y-center">
@@ -126,7 +173,7 @@ class Dashboard extends React.Component {
                                     </div>
                                     <div className="clear">
                                         <div className="text-muted">在线流数目</div>
-                                        <h2>303</h2>
+                                        <h2>{this.state.srs_streams_number}</h2>
                                     </div>
                                 </div>
                             </Card>
@@ -136,19 +183,22 @@ class Dashboard extends React.Component {
                                 <div className="clear y-center">
                                     <div className="clear">
                                         <div className="text-muted">系统运行</div>
-                                        <h2>78天  08:43:30</h2>
+                                        <h2>{this.secondToString(this.state.sys_uptime)}</h2>
                                     </div>
                                 </div>
                                 <div className="clear y-center">
                                     <div className="clear">
-                                        <div className="text-muted">CPU状况</div>
-                                        <h2>2.66% / 100.00%</h2>
+                                        <div className="text-muted">CPU状况 (在线/总核数)</div>
+                                        <h2>{(this.state.sys_cpu_percent * 100).toFixed(2) + " % " + this.state.sys_cpus_online
+                                            + "/" + this.state.sys_cpus}</h2>
                                     </div>
                                 </div>
                                 <div className="clear y-center">
                                     <div className="clear">
                                         <div className="text-muted">内存状况</div>
-                                        <h2>19% 95MB / 491MB</h2>
+                                        <h2>{(this.state.sys_mem_ram_kbyte * this.state.sys_mem_ram_percent / 1024).toFixed(0) + "MB / "
+                                            + Math.round(this.state.sys_mem_ram_kbyte / 1024 / 1024) + "GB "
+                                            + (this.state.sys_mem_ram_percent * 100).toFixed(2) + "%"}</h2>
                                     </div>
                                 </div>
                                 <div className="clear y-center">
@@ -169,7 +219,7 @@ class Dashboard extends React.Component {
                                     </div>
                                     <div className="clear">
                                         <div className="text-muted">在线人数</div>
-                                        <h2>17</h2>
+                                        <h2>{this.state.srs_client_number}</h2>
                                     </div>
                                 </div>
                             </Card>
@@ -196,8 +246,8 @@ class Dashboard extends React.Component {
                                 </div>
                                 <div className="clear y-center">
                                     <div className="clear">
-                                        <div className="text-muted">磁盘</div>
-                                        <h2>0% 0KBps 5KBps</h2>
+                                        <div className="text-muted">磁盘(读/写)</div>
+                                        <h2>{this.state.sys_disk_read_KBps + "KBps / " + this.state.sys_disk_write_KBps + "KBps"}</h2>
                                     </div>
                                 </div>
                             </Card>

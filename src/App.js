@@ -4,7 +4,6 @@ import DocumentTitle from 'react-document-title';
 import SiderCustom from './components/SiderCustom';
 import HeaderCustom from './components/HeaderCustom';
 import { Layout, notification, Icon } from 'antd';
-import { ThemePicker } from './components/widget';
 import { connectAlita } from 'redux-alita';
 
 const { Content, Footer } = Layout;
