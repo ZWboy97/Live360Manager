@@ -1,7 +1,7 @@
 export default {
     menus: [ // 菜单相关路由
         { key: '/app/dashboard/index', title: '直播统计', icon: 'mobile', component: 'Dashboard' },
-        { key: '/app/animation', title: '直播流管理', icon: 'rocket', component: 'BasicAnimations' },
+        { key: '/app/animation', title: '直播流管理', icon: 'rocket', component: 'StreamsManager' },
         { key: '/app/table', title: '在线客户端', icon: 'copy', component: 'ClientsManager' },
         { key: '/app/form', title: '直播流存储', icon: 'edit', component: 'BasicForm' },
         { key: '/app/chart', title: '直播流转码', icon: 'area-chart', component: 'Echarts' },

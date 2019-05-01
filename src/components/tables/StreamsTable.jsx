@@ -3,128 +3,77 @@ import { Table, Icon, Button } from 'antd';
 
 const columns = [{
     title: '流ID',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'id',
+    align: 'center',
+    render: text => <span>{text}</span>,
+}, {
+    title: 'APP',
+    dataIndex: 'app',
+    align: 'center',
     render: text => <span>{text}</span>,
 }, {
     title: '流名称',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'name',
+    align: 'center',
+    render: (text) => <span>{text}</span>
 }, {
     title: 'Vhost',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'vhost',
+    align: 'center',
 }, {
     title: '流状态',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'clients',
+    align: 'center',
+    render: clients => <span>{clients > 0 ? '有流' : '无流'}</span>
 }, {
     title: '在线人数',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'clients',
+    align: 'center',
 }, {
     title: '入口带宽',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'kbps.recv_30s',
+    align: 'center',
+    render: kbps => <span>{(kbps / 1000).toFixed(2) + 'Mbps'}</span>
 },
 {
     title: '出口带宽',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'kbps.send_30s',
+    align: 'center',
+    render: kbps => <span>{(kbps / 1000).toFixed(2) + "Mbps"}</span>
 },
 {
     title: '视频信息',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'video',
+    align: 'center',
+    render: (video) => <span>{
+        (video && 'profile' in video) ? video.codec + '/' + video.profile + '/' + video.level : ""
+    }</span>
 }, {
     title: '音频信息',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'audio',
+    align: 'center',
+    render: audio => <span>{
+        (audio && 'profile' in audio) ? audio.codec + '/' + audio.profile + '/' + audio.sample_rate : ""
+    }</span>
 }, {
     title: '操作',
-    key: 'action',
+    align: 'center',
     render: (text, record) => (
         <span>
-            <Button>Action 一 {record.name}</Button>
+            <Button>预览</Button>
             <span className="ant-divider" />
-            <Button>Delete</Button>
+            <Button>踢流</Button>
             <span className="ant-divider" />
-            <Button className="ant-dropdown-link">
-                More actions <Icon type="down" />
-            </Button>
         </span>
     ),
 }];
 
-const data = [{
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York ',
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'rk',
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'rk',
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'rk',
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'rk',
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'rk',
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'rk',
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'rk',
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'rk',
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'rk',
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'rk',
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'rk',
-}, {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney ',
-}];
-
-const StreamsTable = () => (
-    <Table columns={columns} dataSource={data} />
-);
+class StreamsTable extends React.Component {
+    render() {
+        return (
+            <Table columns={columns} dataSource={this.props.streams} />
+        )
+    }
+}
 
 export default StreamsTable;
