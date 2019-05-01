@@ -1,8 +1,10 @@
 import React from 'react';
-import { Row, Col, Card, Switch } from 'antd';
+import { Row, Col, Card, Modal, message } from 'antd';
 import BreadcrumbCustom from './BreadcrumbCustom';
 import StreamsTable from './tables/StreamsTable';
 import { SRSAPI } from '../axios/api'
+const confirm = Modal.confirm
+
 
 class StreamsManager extends React.Component {
     state = {
@@ -16,6 +18,24 @@ class StreamsManager extends React.Component {
                     streams: respone.data.streams
                 })
             })
+    }
+
+    kickoff = (id) => {
+        confirm({
+            title: '确定强行关闭这个流吗?',
+            content: '与该流相关的推流与播放端将停止工作',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk() {
+                SRSAPI.delete('clients/' + id)
+                    .then(response => {
+                        message.success('踢流成功！')
+                    })
+            },
+            onCancel() {
+            },
+        });
     }
 
     componentWillMount() {
@@ -39,7 +59,7 @@ class StreamsManager extends React.Component {
                     <Col className="gutter-row" md={24}>
                         <div className="gutter-box">
                             <Card title="在线直播流" bordered={false}>
-                                <StreamsTable streams={this.state.streams} />
+                                <StreamsTable streams={this.state.streams} kickoff={this.kickoff} />
                             </Card>
                         </div>
                     </Col>

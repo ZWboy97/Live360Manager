@@ -1,8 +1,9 @@
 import React from 'react';
-import { Row, Col, Card } from 'antd';
+import { Row, Col, Card, message, Modal } from 'antd';
 import ClientsTable from './ClientsTable';
 import BreadcrumbCustom from '../BreadcrumbCustom';
 import { SRSAPI } from '../../axios/api'
+const confirm = Modal.confirm
 
 class ClientsManager extends React.Component {
 
@@ -19,6 +20,25 @@ class ClientsManager extends React.Component {
                 })
             })
     }
+
+    kickoff = (id) => {
+        confirm({
+            title: '确定踢出这个客户端吗?',
+            content: '踢出后将中断该客户端的任务',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk() {
+                SRSAPI.delete('clients/' + id)
+                    .then(response => {
+                        message.success('踢流成功！')
+                    })
+            },
+            onCancel() {
+            },
+        });
+    }
+
 
     componentWillMount() {
         this.updateClients()
@@ -42,7 +62,7 @@ class ClientsManager extends React.Component {
                     <Col className="gutter-row" md={24}>
                         <div className="gutter-box">
                             <Card title="在线用户" bordered={false}>
-                                <ClientsTable data={this.state.clients} />
+                                <ClientsTable data={this.state.clients} kickoff={this.kickoff} />
                             </Card>
                         </div>
                     </Col>
