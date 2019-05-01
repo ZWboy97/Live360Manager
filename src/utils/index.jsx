@@ -1,6 +1,3 @@
-/**
- * Created by hao.cheng on 2017/4/28.
- */
 // 获取url的参数
 export const queryString = () => {
     let _queryString = {};
@@ -11,7 +8,7 @@ export const queryString = () => {
         if (!_queryString.hasOwnProperty(_pair[0])) {
             _queryString[_pair[0]] = decodeURIComponent(_pair[1]);
         } else if (typeof _queryString[_pair[0]] === 'string') {
-            const _arr = [ _queryString[_pair[0]], decodeURIComponent(_pair[1])];
+            const _arr = [_queryString[_pair[0]], decodeURIComponent(_pair[1])];
             _queryString[_pair[0]] = _arr;
         } else {
             _queryString[_pair[0]].push(decodeURIComponent(_pair[1]));
@@ -19,3 +16,20 @@ export const queryString = () => {
     });
     return _queryString;
 };
+
+export const secondToString = (time) => {
+    var days = Math.floor((time / (3600 * 24)))
+    var hours = Math.floor((time - (days * 3600 * 24)) / 3600)
+    var minutes = Math.floor((time - (days * 3600 * 24) - (hours * 3600)) / 60)
+    var seconds = Math.floor(time % 60)
+    var time_string = ""
+    if (days > 0) {
+        time_string += (days + "天 ")
+    }
+    if (hours > 0) {
+        time_string += (hours + "小时 ")
+    }
+    time_string += (minutes + "分钟 ")
+    time_string += (seconds + "秒")
+    return time_string
+}

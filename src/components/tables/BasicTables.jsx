@@ -3,45 +3,17 @@
  */
 import React from 'react';
 import { Row, Col, Card } from 'antd';
-import BasicTable from './BasicTable';
-import SelectTable from './SelectTable';
-import SortTable from './SortTable';
-import SearchTable from './SearchTable';
+import ClientsTable from './ClientsTable';
 import BreadcrumbCustom from '../BreadcrumbCustom';
 
 const BasicTables = () => (
     <div className="gutter-example">
-        <BreadcrumbCustom first="表格" second="基础表格" />
+        <BreadcrumbCustom first="在线客户端" />
         <Row gutter={16}>
             <Col className="gutter-row" md={24}>
                 <div className="gutter-box">
-                    <Card title="基础表格" bordered={false}>
-                        <BasicTable />
-                    </Card>
-                </div>
-            </Col>
-        </Row>
-        <Row gutter={16}>
-            <Col className="gutter-row" md={24}>
-                <div className="gutter-box">
-                    <Card title="基础表格" bordered={false}>
-                        <SelectTable />
-                    </Card>
-                </div>
-            </Col>
-        </Row>
-        <Row gutter={16}>
-            <Col className="gutter-row" md={12}>
-                <div className="gutter-box">
-                    <Card title="可控的筛选和排序" bordered={false}>
-                        <SortTable />
-                    </Card>
-                </div>
-            </Col>
-            <Col className="gutter-row" md={12}>
-                <div className="gutter-box">
-                    <Card title="自定义筛选" bordered={false}>
-                        <SearchTable />
+                    <Card title="在线用户" bordered={false}>
+                        <ClientsTable />
                     </Card>
                 </div>
             </Col>
