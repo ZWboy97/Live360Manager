@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Icon, Button } from 'antd';
 
+
 class StreamsTable extends React.Component {
 
     columns = [{
@@ -63,7 +64,10 @@ class StreamsTable extends React.Component {
         render: (text, record) => (
             record.publish.active ? (
                 <span>
-                    <Button>预览</Button>
+                    <a href={'http://39.106.194.43:8090/Live360WebPlayer/Live360Player.html?appname='
+                        + record.app + '&id=' + record.name} target='_blank' rel='noopener noreferrer'>
+                        <Button>预览</Button>
+                    </a>
                     <span className="ant-divider" />
                     <Button onClick={() => this.props.kickoff(record.publish.cid)}>踢流</Button>
                     <span className="ant-divider" />

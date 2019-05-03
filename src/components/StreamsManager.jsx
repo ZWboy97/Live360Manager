@@ -38,6 +38,10 @@ class StreamsManager extends React.Component {
         });
     }
 
+    preview = (appname, id) => {
+
+    }
+
     componentWillMount() {
         this.updateStreams()
         this.interval = setInterval(
@@ -59,7 +63,9 @@ class StreamsManager extends React.Component {
                     <Col className="gutter-row" md={24}>
                         <div className="gutter-box">
                             <Card title="在线直播流" bordered={false}>
-                                <StreamsTable streams={this.state.streams} kickoff={this.kickoff} />
+                                <StreamsTable streams={this.state.streams}
+                                    kickoff={this.kickoff}
+                                    preview={this.preview} />
                             </Card>
                         </div>
                     </Col>
